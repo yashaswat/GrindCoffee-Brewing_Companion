@@ -28,7 +28,22 @@ st.write("No worries! _Use this, bitch!_")
 st.divider()
 
 # Create the grind dictionary
-grind_dict = {round(outer + (inner / 6), 2): [inner, outer] for outer in [x * 0.25 for x in range(4, 45)] for inner in range(-6, 7)}
+grind_dict = {}
+
+for outer in [x * 0.25 for x in range(4, 45)]:
+    
+    for inner in range(0, 7):
+                
+        grind_pos = round(outer+(inner/6), 2)
+        grind_neg = round(outer+((-inner)/6), 2)
+        
+        if grind_pos not in grind_dict.keys():
+            grind_dict[grind_pos] = [inner, outer]
+        if grind_neg not in grind_dict.keys():
+            grind_dict[grind_neg] = [-inner, outer]
+        else:
+            continue
+
 grind_dict = {k: grind_dict[k] for k in sorted(grind_dict.keys())}
 
 col1, col2, col3, col4, col5 = st.columns(5, vertical_alignment="center")
@@ -44,13 +59,13 @@ def adjust_grind(direction):
         st.session_state.curr_inner = grind_dict[next_grind][0]
         st.session_state.curr_outer = grind_dict[next_grind][1]
 
-col1.button("Finer Grind", on_click=lambda: adjust_grind(-1))
-col5.button("Coarser Grind", on_click=lambda: adjust_grind(1))
+col2.button("Finer Grind", on_click=lambda: adjust_grind(-1))
+col4.button("Coarser Grind", on_click=lambda: adjust_grind(1))
 
 col3.markdown(f"<h1 style='text-align: center; font-size: 48px;'>{st.session_state.curr_grind}</h1>", unsafe_allow_html=True)
 
 st.slider("**Inner Ring Value**", min_value=-6, max_value=6, step=1, value=st.session_state.curr_inner, on_change=update_grind, key='curr_inner')
-st.slider("**Outer Ring Value**", min_value=1.0, max_value=12.0, step=0.25, value=st.session_state.curr_outer, on_change=update_grind, key='curr_outer')
+st.slider("**Outer Ring Value**", min_value=1.0, max_value=11.0, step=0.25, value=st.session_state.curr_outer, on_change=update_grind, key='curr_outer')
 
 # Uncomment to save the dictionary to a JSON file
 # with open('C:/Users/YASHASWAT/Desktop/grind_dict.json', 'w') as jsonfile:

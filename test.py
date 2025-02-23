@@ -23,12 +23,15 @@ dict = {}
 
 for outer in [x * 0.25 for x in range(4, 45)]:
     
-    for inner in range(-6, 7):
+    for inner in range(0, 7):
                 
-        grind = round(outer+(inner/6), 2)
+        grind_pos = round(outer+(inner/6), 2)
+        grind_neg = round(outer+((-inner)/6), 2)
         
-        if grind not in dict.keys():
-            dict[grind] = [inner, outer]
+        if grind_pos not in dict.keys():
+            dict[grind_pos] = [inner, outer]
+        if grind_neg not in dict.keys():
+            dict[grind_neg] = [-inner, outer]
         else:
             continue
 
