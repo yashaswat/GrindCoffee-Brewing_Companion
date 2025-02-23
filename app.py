@@ -66,5 +66,5 @@ st.slider("**Inner Ring Value**", min_value=-6, max_value=6, step=1, value=st.se
 st.slider("**Outer Ring Value**", min_value=1.0, max_value=11.0, step=0.25, value=st.session_state.curr_outer, on_change=update_grind, key='curr_outer')
 
 # Uncomment to save the dictionary to a JSON file
-with open('C:/Users/YASHASWAT/Desktop/grind_dict.json', 'w') as jsonfile:
-    json.dump(grind_dict, jsonfile, indent=4)
+# with open('C:/Users/YASHASWAT/Desktop/grind_dict.json', 'w') as jsonfile:
+#     json.dump(grind_dict, jsonfile, indent=4)
