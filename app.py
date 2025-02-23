@@ -32,17 +32,15 @@ grind_dict = {}
 
 for outer in [x * 0.25 for x in range(4, 45)]:
     
-    for inner in range(0, 7):
+    for inner in range(-6, 7):
                 
-        grind_pos = round(outer+(inner/6), 2)
-        grind_neg = round(outer+((-inner)/6), 2)
+        grind = round(outer+(inner/6), 2)        
         
-        if grind_pos not in grind_dict.keys():
-            grind_dict[grind_pos] = [inner, outer]
-        if grind_neg not in grind_dict.keys():
-            grind_dict[grind_neg] = [-inner, outer]
+        if grind not in grind_dict.keys():
+            grind_dict[grind] = [inner, outer]
         else:
-            continue
+            if abs(inner) < abs(grind_dict[grind][0]):
+                grind_dict[grind] = [inner, outer]
 
 grind_dict = {k: grind_dict[k] for k in sorted(grind_dict.keys())}
 
@@ -68,5 +66,5 @@ st.slider("**Inner Ring Value**", min_value=-6, max_value=6, step=1, value=st.se
 st.slider("**Outer Ring Value**", min_value=1.0, max_value=11.0, step=0.25, value=st.session_state.curr_outer, on_change=update_grind, key='curr_outer')
 
 # Uncomment to save the dictionary to a JSON file
-# with open('C:/Users/YASHASWAT/Desktop/grind_dict.json', 'w') as jsonfile:
-#     json.dump(grind_dict, jsonfile, indent=4)
+with open('C:/Users/YASHASWAT/Desktop/grind_dict.json', 'w') as jsonfile:
+    json.dump(grind_dict, jsonfile, indent=4)
