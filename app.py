@@ -1,4 +1,3 @@
-from pprint import pprint
 import json
 import streamlit as st
 from streamlit_lottie import st_lottie
@@ -46,8 +45,10 @@ grind_dict = {k: grind_dict[k] for k in sorted(grind_dict.keys())}
 
 col1, col2, col3, col4, col5 = st.columns(5, vertical_alignment="center")
 
+
 def update_grind():
     st.session_state.curr_grind = round(st.session_state.curr_outer + (st.session_state.curr_inner / 6), 2)
+
 
 def adjust_grind(direction):
     index = list(grind_dict.keys()).index(st.session_state.curr_grind) + direction
@@ -57,10 +58,12 @@ def adjust_grind(direction):
         st.session_state.curr_inner = grind_dict[next_grind][0]
         st.session_state.curr_outer = grind_dict[next_grind][1]
 
+
 col2.button("Finer Grind", on_click=lambda: adjust_grind(-1), use_container_width=True)
 col4.button("Coarser Grind", on_click=lambda: adjust_grind(1), use_container_width=True)
 
-col3.markdown(f"<h1 style='text-align: center; font-size: 48px;'>{st.session_state.curr_grind}</h1>", unsafe_allow_html=True)
+col3.html(f"<h1 style='text-align: center; font-size: 48px;'>{st.session_state.curr_grind}</h1>")
+
 
 def change_inner_slider(direction):
     if direction=='minus' and st.session_state.curr_inner!=-6:
@@ -70,6 +73,7 @@ def change_inner_slider(direction):
         st.session_state.curr_inner += 1
         update_grind()
 
+
 def change_outer_slider(direction):
     if direction=='minus' and st.session_state.curr_outer!=1.00:
         st.session_state.curr_outer -= 0.25
@@ -78,15 +82,25 @@ def change_outer_slider(direction):
         st.session_state.curr_outer += 0.25
         update_grind()
 
+
+toggle = st.toggle('Show slider adjust buttons')
+
+st.write('')
+
 inner_col1, inner_col2, inner_col3 = st.columns([0.1, 0.8, 0.1])
-inner_col1.button("\-", key='in\-', on_click=change_inner_slider, args=('minus',))
-inner_col2.slider("**Inner Ring Value**", min_value=-6, max_value=6, step=1, value=st.session_state.curr_inner, on_change=update_grind, key='curr_inner')
-inner_col3.button("\+", key='in\+', on_click=change_inner_slider, args=('plus',))
+inner_col2.slider("**Inner Ring Value**", min_value=-6, max_value=6, step=1,
+                  value=st.session_state.curr_inner, on_change=update_grind, key='curr_inner')
 
 outer_col1, outer_col2, outer_col3 = st.columns([0.1, 0.8, 0.1])
-outer_col1.button('\-', key='out\-', on_click=change_outer_slider, args=('minus',))
-outer_col2.slider("**Outer Ring Value**", min_value=1.0, max_value=11.0, step=0.25, value=st.session_state.curr_outer, on_change=update_grind, key='curr_outer')
-outer_col3.button('\+', key='out\+', on_click=change_outer_slider, args=('plus',))
+outer_col2.slider("**Outer Ring Value**", min_value=1.0, max_value=11.0, step=0.25,
+                  value=st.session_state.curr_outer, on_change=update_grind, key='curr_outer')
+
+if toggle:
+    inner_col1.button("\-", key='in\-', on_click=change_inner_slider, args=('minus',), use_container_width=True)
+    inner_col3.button("\+", key='in\+', on_click=change_inner_slider, args=('plus',), use_container_width=True)
+    
+    outer_col1.button('\-', key='out\-', on_click=change_outer_slider, args=('minus',), use_container_width=True)
+    outer_col3.button('\+', key='out\+', on_click=change_outer_slider, args=('plus',), use_container_width=True)
 
 # Uncomment to save the dictionary to a JSON file
 # with open('C:/Users/YASHASWAT/Desktop/grind_dict.json', 'w') as jsonfile:
