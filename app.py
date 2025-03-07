@@ -1,6 +1,6 @@
 import json
 import time
-import copy
+
 import streamlit as st
 from streamlit_lottie import st_lottie
 
@@ -15,13 +15,13 @@ if 'curr_grind' not in st.session_state:
 col1, col2 = st.columns([0.25, 0.75])
 
 with col1:
-    with open("logo_anim.json", "r") as jsonfile:
+    with open("Images/logo_anim.json", "r") as jsonfile:
         logo1 = json.load(jsonfile)
         
     st.lottie(logo1, loop=True, height=150, width=150, quality='medium')
     
 with col2:
-    st.title('Coffee Grinder Adjustment Tool')
+    st.title('GrindCoffee: Your Brewing Companion')
 
 st.divider()
 st.write("Oh no! Can't make coffee because the companion app to your coffee grinder is down?")
