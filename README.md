@@ -2,6 +2,8 @@
 
 ![alt text](Images/readme_banner.png)
 
+[LIVE ON STREAMLIT ☕🔗](grindcoffee.streamlit.app)
+
 GrindCoffee is a simple coffee brewing companion that helps you track and manage your coffee brewing process. Whether you're a beginner to coffee, an enthusiast or a home barista, GrindCoffee provides the tools you need to brew the perfect cup of coffee.
 
 The idea for GrindCoffee came from a problem that my coffee-nerd friend was facing. He had just bought some fancy brewing equipment and coffee grinder. But, the assistance app for the grinder was broken and no longer being developed. He came to me with this issue and after reverse engineering the grind size formula with him, I got to working on this project. 
