@@ -4,7 +4,7 @@ import base64
 
 import streamlit as st
 from streamlit_lottie import st_lottie
-from playsound3 import playsound
+from pygame import mixer
 
 # Initialize session state variables
 if 'curr_inner' not in st.session_state:
@@ -128,30 +128,30 @@ if 'stir' not in st.session_state:
     st.session_state.stir = 10
 if 'timer_active' not in st.session_state:
     st.session_state.timer_active = False
-sound = None
-success_message = None
+mixer.init()
 
-def set_timers(bloom, brew, stir):
+def set_timers(bloom, brew, stir, timer_start):
 
-    if sound is not None:
-        sound.stop()
+    if mixer.music.get_busy():
+        mixer.music.stop()
     
     st.session_state.bloom = bloom
     st.session_state.brew = brew
     st.session_state.stir = stir
-    st.session_state.timer_active = True
+    
+    if timer_start:
+        st.session_state.timer_active = True
 
 
 def reset_timer():
     
     st.session_state.timer_active = False
-    if sound:
-        sound.stop()
-    # if success_message:
-    #     success_message.empty()
-    st.session_state.bloom = 30
-    st.session_state.brew = 180
-    st.session_state.stir = 10
+    
+    if mixer.music.get_busy():
+        mixer.music.stop()
+    
+    set_timers(bloom, brew, stir, False)
+
 
 def play_pause_timer():
     if st.session_state.timer_active:
@@ -159,20 +159,10 @@ def play_pause_timer():
     else:
         st.session_state.timer_active = True
     
-      
+
 def play_audio(path):
-    with open(path, 'rb') as f:
-        audio_data = f.read()
-        b64_audio = base64.b64encode(audio_data).decode()
-        play_audio_md = f"""
-            <audio controls autoplay="true">
-            <source src="data:audio/mp3;base64,{b64_audio}" type="audio/mp3">
-            </audio>
-            """
-        st.markdown(
-            play_audio_md,
-            unsafe_allow_html=True,
-        )
+    mixer.music.load(path)
+    mixer.music.play()
 
 
 st.subheader('Brew Timer', anchor=False)
@@ -181,13 +171,13 @@ st.write('\n')
 timer_col1, timer_col2 = st.columns([0.3, 0.7], gap='medium', border=True, vertical_alignment='center')
 
 with timer_col1:
-    # with st.form:
+
     bloom = st.number_input('Bloom Stage: ', min_value=15, value=30, step=15)
     brew = st.number_input('Brew Stage: ', min_value=15, value=180, step=15)
     stir = st.number_input('Stir & Pour Stage: ', min_value=0, value=10, step=5)
     st.write('\n')
     
-    start_timer = st.button('Start Timer', type='primary', on_click=set_timers, args=(bloom, brew, stir), use_container_width=True)
+    start_timer = st.button('Start Timer', type='primary', on_click=set_timers, args=(bloom, brew, stir, True), use_container_width=True)
         
     play_pause_col, reset_col = st.columns([0.65, 0.35], gap='small')
     play_pause_col.button('▶️/⏸️', type='primary', on_click=play_pause_timer, use_container_width=True)
@@ -220,8 +210,7 @@ while st.session_state.timer_active:
             st.rerun()
     
     success_message = timer_col2.success('All Stages Complete! Enjoy your Coffee ☕️', icon="✅")
-    sound = playsound('Media/timer_alarm.mp3')
-
+    play_audio('Media/timer_alarm.mp3')
     time.sleep(30)
     success_message.empty()
     
