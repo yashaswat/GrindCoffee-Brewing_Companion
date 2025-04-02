@@ -1,8 +1,10 @@
 import json
 import time
+import base64
 
 import streamlit as st
 from streamlit_lottie import st_lottie
+from playsound3 import playsound
 
 # Initialize session state variables
 if 'curr_inner' not in st.session_state:
@@ -15,7 +17,7 @@ if 'curr_grind' not in st.session_state:
 col1, col2 = st.columns([0.25, 0.75])
 
 with col1:
-    with open("Images/logo_anim.json", "r") as jsonfile:
+    with open("Media/logo_anim.json", "r") as jsonfile:
         logo1 = json.load(jsonfile)
         
     st.lottie(logo1, loop=True, height=150, width=150, quality='medium')
@@ -27,6 +29,7 @@ st.divider()
 st.write("Oh no! Can't make coffee because the companion app to your coffee grinder is down?")
 st.write("No worries! _Use this bad boy!_")
 st.divider()
+st.write('\n')
 
 # Create the grind dictionary
 grind_dict = {}
@@ -65,13 +68,13 @@ st.write('\n')
 with st.container(border=True):
     col1, col2, col3, col4, col5 = st.columns(5, vertical_alignment="center")
 
-    col1.image('Images/fine_grind.png')
+    col1.image('Media/fine_grind.png')
     col2.button("Finer Grind", type='primary', on_click=lambda: adjust_grind(-1), use_container_width=True)
     
     col3.html(f"<h1 style='text-align: center; font-size: 48px;'>{st.session_state.curr_grind}</h1>")
     
     col4.button("Coarser Grind", type='primary', on_click=lambda: adjust_grind(1), use_container_width=True)
-    col5.image('Images/coarse_grind.png')
+    col5.image('Media/coarse_grind.png')
     
 
 def change_inner_slider(direction):
@@ -125,15 +128,52 @@ if 'stir' not in st.session_state:
     st.session_state.stir = 10
 if 'timer_active' not in st.session_state:
     st.session_state.timer_active = False
-
+sound = None
+success_message = None
 
 def set_timers(bloom, brew, stir):
 
+    if sound is not None:
+        sound.stop()
+    
     st.session_state.bloom = bloom
     st.session_state.brew = brew
     st.session_state.stir = stir
     st.session_state.timer_active = True
-        
+
+
+def reset_timer():
+    
+    st.session_state.timer_active = False
+    if sound:
+        sound.stop()
+    # if success_message:
+    #     success_message.empty()
+    st.session_state.bloom = 30
+    st.session_state.brew = 180
+    st.session_state.stir = 10
+
+def play_pause_timer():
+    if st.session_state.timer_active:
+        st.session_state.timer_active = False
+    else:
+        st.session_state.timer_active = True
+    
+      
+def play_audio(path):
+    with open(path, 'rb') as f:
+        audio_data = f.read()
+        b64_audio = base64.b64encode(audio_data).decode()
+        play_audio_md = f"""
+            <audio controls autoplay="true">
+            <source src="data:audio/mp3;base64,{b64_audio}" type="audio/mp3">
+            </audio>
+            """
+        st.markdown(
+            play_audio_md,
+            unsafe_allow_html=True,
+        )
+
 
 st.subheader('Brew Timer', anchor=False)
 st.write('\n')
@@ -147,12 +187,18 @@ with timer_col1:
     stir = st.number_input('Stir & Pour Stage: ', min_value=0, value=10, step=5)
     st.write('\n')
     
-    if st.button('Start Timer', type='primary', on_click=set_timers, args=(bloom, brew, stir)):
-        st.info('Timer started...')
+    start_timer = st.button('Start Timer', type='primary', on_click=set_timers, args=(bloom, brew, stir), use_container_width=True)
+        
+    play_pause_col, reset_col = st.columns([0.65, 0.35], gap='small')
+    play_pause_col.button('▶️/⏸️', type='primary', on_click=play_pause_timer, use_container_width=True)
+    reset_col.button(':repeat:', type='primary', on_click=reset_timer, use_container_width=True)
+    
+    if start_timer:
+        st.info('Timer started...') 
     
 with timer_col2:
     
-    st.image('Images/brew_banner.png')
+    st.image('Media/brew_banner.png')
     
     timer1, timer2, timer3 = st.columns(3, border=True)
     
@@ -173,9 +219,10 @@ while st.session_state.timer_active:
             time.sleep(1)
             st.rerun()
     
-    # prog_bar.empty()
     success_message = timer_col2.success('All Stages Complete! Enjoy your Coffee ☕️', icon="✅")
-    time.sleep(5)
+    sound = playsound('Media/timer_alarm.mp3')
+
+    time.sleep(30)
     success_message.empty()
     
     st.session_state.timer_active = False
