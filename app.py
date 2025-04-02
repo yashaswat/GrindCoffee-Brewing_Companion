@@ -3,7 +3,6 @@ import time
 
 import streamlit as st
 from streamlit_lottie import st_lottie
-import pygame
 
 # Initialize session state variables
 if 'curr_inner' not in st.session_state:
@@ -127,13 +126,12 @@ if 'stir' not in st.session_state:
     st.session_state.stir = 10
 if 'timer_active' not in st.session_state:
     st.session_state.timer_active = False
-pygame.mixer.init()
+if 'audio_playing' not in st.session_state:
+    st.session_state.audio_playing = False
 
 def set_timers(bloom, brew, stir, timer_start):
 
-    if pygame.mixer.music.get_busy():
-        pygame.mixer.music.stop()
-    
+    st.session_state.audio_playing = False
     st.session_state.bloom = bloom
     st.session_state.brew = brew
     st.session_state.stir = stir
@@ -145,9 +143,7 @@ def set_timers(bloom, brew, stir, timer_start):
 def reset_timer():
     
     st.session_state.timer_active = False
-    
-    if pygame.mixer.music.get_busy():
-        pygame.mixer.music.stop()
+    st.session_state.audio_playing = False
     
     set_timers(bloom, brew, stir, False)
 
@@ -160,8 +156,17 @@ def play_pause_timer():
     
 
 def play_audio(path):
-    pygame.mixer.music.load(path)
-    pygame.mixer.music.play()
+    sound = st.empty()
+    audio_file = st.audio("Media/timer_alarm.mp3", autoplay=True, format="audio/mp3", end_time=0.20)
+
+    hide_audio_style = """
+    <style>
+    .stAudio {
+        display: none;
+    }
+    </style>
+    """
+    sound.markdown(hide_audio_style, unsafe_allow_html=True)
 
 
 st.subheader('Brew Timer', anchor=False)
@@ -209,7 +214,11 @@ while st.session_state.timer_active:
             st.rerun()
     
     success_message = timer_col2.success('All Stages Complete! Enjoy your Coffee ☕️', icon="✅")
-    play_audio('Media/timer_alarm.mp3')
+    st.session_state.audio_playing = True
+    
+    if st.session_state.audio_playing:
+        play_audio('Media/timer_alarm.mp3')
+
     time.sleep(30)
     success_message.empty()
     
