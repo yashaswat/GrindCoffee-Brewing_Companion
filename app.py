@@ -1,6 +1,5 @@
 import json
 import time
-import base64
 
 import streamlit as st
 from streamlit_lottie import st_lottie
