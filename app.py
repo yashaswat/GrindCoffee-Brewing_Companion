@@ -51,9 +51,9 @@ def update_grind():
 
 
 def adjust_grind(direction):
-    index = list(grind_dict.keys()).index(st.session_state.curr_grind) + direction
-    if 0 <= index < len(grind_dict):
-        next_grind = list(grind_dict.keys())[index]
+    next_index = list(grind_dict.keys()).index(st.session_state.curr_grind) + direction
+    if 0 <= next_index < len(grind_dict):
+        next_grind = list(grind_dict.keys())[next_index]
         st.session_state.curr_grind = next_grind
         st.session_state.curr_inner = grind_dict[next_grind][0]
         st.session_state.curr_outer = grind_dict[next_grind][1]
@@ -73,7 +73,6 @@ with st.container(border=True):
     col4.button("Coarser Grind", type='primary', on_click=lambda: adjust_grind(1), use_container_width=True)
     col5.image('Images/coarse_grind.png')
     
-
 
 def change_inner_slider(direction):
     if direction=='minus' and st.session_state.curr_inner!=-6:
@@ -98,12 +97,10 @@ st.write('\n')
 
 with st.container(border=True):
     inner_col1, inner_col2, inner_col3 = st.columns([0.1, 0.8, 0.1])
-    inner_col2.slider("**Inner Ring Value**", min_value=-6, max_value=6, step=1,
-                    value=st.session_state.curr_inner, on_change=update_grind, key='currrent_inner')
+    inner_col2.slider("**Inner Ring Value**", min_value=-6, max_value=6, step=1, on_change=update_grind, key='curr_inner')
 
     outer_col1, outer_col2, outer_col3 = st.columns([0.1, 0.8, 0.1])
-    outer_col2.slider("**Outer Ring Value**", min_value=1.0, max_value=11.0, step=0.25,
-                    value=st.session_state.curr_outer, on_change=update_grind, key='currrent_outer')
+    outer_col2.slider("**Outer Ring Value**", min_value=1.0, max_value=11.0, step=0.25, on_change=update_grind, key='curr_outer')
 
 if toggle:
     inner_col1.button("\-", key='in\-', on_click=change_inner_slider, args=('minus',), use_container_width=True)
@@ -147,7 +144,7 @@ with timer_col1:
     # with st.form:
     bloom = st.number_input('Bloom Stage: ', min_value=15, value=30, step=15)
     brew = st.number_input('Brew Stage: ', min_value=15, value=180, step=15)
-    stir = st.number_input('Stir Stage: ', min_value=0, value=10, step=5)
+    stir = st.number_input('Stir & Pour Stage: ', min_value=0, value=10, step=5)
     st.write('\n')
     
     if st.button('Start Timer', type='primary', on_click=set_timers, args=(bloom, brew, stir)):
