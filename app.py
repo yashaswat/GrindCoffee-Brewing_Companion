@@ -3,7 +3,7 @@ import time
 
 import streamlit as st
 from streamlit_lottie import st_lottie
-from pygame import mixer
+import pygame
 
 # Initialize session state variables
 if 'curr_inner' not in st.session_state:
@@ -127,12 +127,12 @@ if 'stir' not in st.session_state:
     st.session_state.stir = 10
 if 'timer_active' not in st.session_state:
     st.session_state.timer_active = False
-mixer.init()
+pygame.mixer.init()
 
 def set_timers(bloom, brew, stir, timer_start):
 
-    if mixer.music.get_busy():
-        mixer.music.stop()
+    if pygame.mixer.music.get_busy():
+        pygame.mixer.music.stop()
     
     st.session_state.bloom = bloom
     st.session_state.brew = brew
@@ -146,8 +146,8 @@ def reset_timer():
     
     st.session_state.timer_active = False
     
-    if mixer.music.get_busy():
-        mixer.music.stop()
+    if pygame.mixer.music.get_busy():
+        pygame.mixer.music.stop()
     
     set_timers(bloom, brew, stir, False)
 
@@ -160,8 +160,8 @@ def play_pause_timer():
     
 
 def play_audio(path):
-    mixer.music.load(path)
-    mixer.music.play()
+    pygame.mixer.music.load(path)
+    pygame.mixer.music.play()
 
 
 st.subheader('Brew Timer', anchor=False)
