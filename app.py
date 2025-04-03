@@ -4,30 +4,6 @@ import time
 import streamlit as st
 from streamlit_lottie import st_lottie
 
-# Initialize session state variables
-if 'curr_inner' not in st.session_state:
-    st.session_state.curr_inner = -6
-if 'curr_outer' not in st.session_state:
-    st.session_state.curr_outer = 1.0
-if 'curr_grind' not in st.session_state:
-    st.session_state.curr_grind = round(st.session_state.curr_outer + (st.session_state.curr_inner / 6), 2)
-
-col1, col2 = st.columns([0.25, 0.75])
-
-with col1:
-    with open("Media/logo_anim.json", "r") as jsonfile:
-        logo1 = json.load(jsonfile)
-        
-    st.lottie(logo1, loop=True, height=150, width=150, quality='medium')
-    
-with col2:
-    st.title('GrindCoffee: Your Brewing Companion')
-
-st.divider()
-st.write("Oh no! Can't make coffee because the companion app to your coffee grinder is down?")
-st.write("No worries! _Use this bad boy!_")
-st.divider()
-st.write('\n')
 
 # Create the grind dictionary
 grind_dict = {}
@@ -46,6 +22,76 @@ for outer in [x * 0.25 for x in range(4, 45)]:
 
 grind_dict = {k: grind_dict[k] for k in sorted(grind_dict.keys())}
 
+# Uncomment to save the dictionary to a JSON file
+# with open('C:/Users/YASHASWAT/Desktop/grind_dict.json', 'w') as jsonfile:
+#     json.dump(grind_dict, jsonfile, indent=4)
+
+
+col1, col2 = st.columns([0.25, 0.75])
+
+with col1:
+    with open("Media/logo_anim.json", "r") as jsonfile:
+        logo1 = json.load(jsonfile)
+        
+    st.lottie(logo1, loop=True, height=150, width=150, quality='medium')
+    
+with col2:
+    st.title('GrindCoffee: Your Brewing Companion')
+
+st.divider()
+st.write("Oh no! Can't make coffee because the companion app to your coffee grinder is down?")
+st.write("No worries! _Use this bad boy!_")
+st.divider()
+st.write('\n')
+
+
+def recipe(brew_type):
+
+    with open('recipes.json', 'r', encoding='utf-8') as f:
+        recipes = json.load(f)['recipes']
+        
+        for user_brew in recipes:
+            if user_brew['name'] == brew_type:
+                recipe_box.markdown(f"### :coffee: {user_brew['name']}")
+                recipe_box.image(user_brew['image'], use_container_width=True)
+                recipe_box.markdown(f"**Grind Size:** {user_brew['grind_size']}")
+            
+                recipe_box.markdown("#### Ingredients:")
+                for ingredient, amount in user_brew["ingredients"].items():
+                    recipe_box.markdown(f"- **{ingredient.capitalize()}**: {amount}")
+                
+                recipe_box.markdown("#### Equipment:")
+                for item in user_brew["equipment"]:
+                    recipe_box.markdown(f"- {item}")
+                
+                recipe_box.markdown("#### Steps:")
+                for i, step in enumerate(user_brew["steps"], start=1):
+                    recipe_box.markdown(f"{i}. {step}")
+                
+                break
+
+
+st.subheader('Brewing Recipes', anchor=False)
+st.write('\n')
+
+brew_type = st.segmented_control('**Select your preferred home brewing method:**',
+                     options=['French Press', 'Pour-Over', 'AeroPress', 'Moka Pot', 'Cold Brew'])
+if brew_type:
+    recipe_box = st.container(border=True)
+    recipe(brew_type)
+    
+st.divider()
+st.write('\n')
+
+
+# Initialize session state variables
+if 'curr_inner' not in st.session_state:
+    st.session_state.curr_inner = -6
+if 'curr_outer' not in st.session_state:
+    st.session_state.curr_outer = 1.0
+if 'curr_grind' not in st.session_state:
+    st.session_state.curr_grind = round(st.session_state.curr_outer + (st.session_state.curr_inner / 6), 2)
+
 
 def update_grind():
     st.session_state.curr_grind = round(st.session_state.curr_outer + (st.session_state.curr_inner / 6), 2)
@@ -59,21 +105,6 @@ def adjust_grind(direction):
         st.session_state.curr_inner = grind_dict[next_grind][0]
         st.session_state.curr_outer = grind_dict[next_grind][1]
 
-
-st.subheader('Grind Size Assistant', anchor=False)
-st.write('\n')
-
-with st.container(border=True):
-    col1, col2, col3, col4, col5 = st.columns(5, vertical_alignment="center")
-
-    col1.image('Media/fine_grind.png')
-    col2.button("Finer Grind", type='primary', on_click=lambda: adjust_grind(-1), use_container_width=True)
-    
-    col3.html(f"<h1 style='text-align: center; font-size: 48px;'>{st.session_state.curr_grind}</h1>")
-    
-    col4.button("Coarser Grind", type='primary', on_click=lambda: adjust_grind(1), use_container_width=True)
-    col5.image('Media/coarse_grind.png')
-    
 
 def change_inner_slider(direction):
     if direction=='minus' and st.session_state.curr_inner!=-6:
@@ -93,6 +124,20 @@ def change_outer_slider(direction):
         update_grind()
 
 
+st.subheader('Grind Size Assistant', anchor=False)
+st.write('\n')
+
+with st.container(border=True):
+    col1, col2, col3, col4, col5 = st.columns(5, vertical_alignment="center")
+
+    col1.image('Media/fine_grind.png')
+    col2.button("Finer Grind", type='primary', on_click=lambda: adjust_grind(-1), use_container_width=True)
+    
+    col3.html(f"<h1 style='text-align: center; font-size: 48px;'>{st.session_state.curr_grind}</h1>")
+    
+    col4.button("Coarser Grind", type='primary', on_click=lambda: adjust_grind(1), use_container_width=True)
+    col5.image('Media/coarse_grind.png')
+
 toggle = st.toggle('Show slider adjust buttons')
 st.write('\n')
 
@@ -110,12 +155,9 @@ if toggle:
     outer_col1.button('\-', key='out\-', on_click=change_outer_slider, args=('minus',), use_container_width=True)
     outer_col3.button('\+', key='out\+', on_click=change_outer_slider, args=('plus',), use_container_width=True)
 
-# Uncomment to save the dictionary to a JSON file
-# with open('C:/Users/YASHASWAT/Desktop/grind_dict.json', 'w') as jsonfile:
-#     json.dump(grind_dict, jsonfile, indent=4)
-
 st.divider()
 st.write('\n')
+
 
 # initialize timer session states
 if 'bloom' not in st.session_state:
@@ -226,39 +268,3 @@ while st.session_state.timer_active:
 
 st.divider()
 st.write('\n')
-
-
-def recipe(brew_type):
-
-    with open('recipes.json', 'r', encoding='utf-8') as f:
-        recipes = json.load(f)['recipes']
-        
-        for user_brew in recipes:
-            if user_brew['name'] == brew_type:
-                recipe_box.markdown(f"### :coffee: {user_brew['name']}")
-                recipe_box.image(user_brew['image'], use_container_width=True)
-                recipe_box.markdown(f"**Grind Size:** {user_brew['grind_size']}")
-            
-                recipe_box.markdown("#### Ingredients:")
-                for ingredient, amount in user_brew["ingredients"].items():
-                    recipe_box.markdown(f"- **{ingredient.capitalize()}**: {amount}")
-                
-                recipe_box.markdown("#### Equipment:")
-                for item in user_brew["equipment"]:
-                    recipe_box.markdown(f"- {item}")
-                
-                recipe_box.markdown("#### Steps:")
-                for i, step in enumerate(user_brew["steps"], start=1):
-                    recipe_box.markdown(f"{i}. {step}")
-                
-                break
-
-
-st.subheader('Brewing Recipes', anchor=False)
-st.write('\n')
-
-brew_type = st.segmented_control('**Select your preferred home brewing method:**',
-                     options=['French Press', 'Pour-Over', 'AeroPress', 'Moka Pot', 'Cold Brew'])
-if brew_type:
-    recipe_box = st.container(border=True)
-    recipe(brew_type)
