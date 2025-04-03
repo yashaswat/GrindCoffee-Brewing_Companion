@@ -1,0 +1,102 @@
+{
+    "recipes": [
+      {
+        "name": "French Press",
+        "image": "Media/frenchpress_banner2.jpeg",
+        "grind_size": "Coarse (like sea salt)",
+        "ingredients": {
+          "coffee": "15g",
+          "water": "225ml (93°C)"
+        },
+        "equipment": ["French Press"],
+        "steps": [
+          "Heat water to 93°C.",
+          "Grind coffee to a coarse consistency.",
+          "Add coffee grounds to the French Press.",
+          "Pour about 50ml of hot water to bloom the coffee and let it sit for 30 seconds.",
+          "Add the remaining water and stir gently.",
+          "Place the lid on and let the coffee steep for 4 minutes.",
+          "Slowly press down the plunger.",
+          "Pour immediately into a cup to prevent over-extraction and enjoy."
+        ]
+      },
+      {
+        "name": "AeroPress",
+        "image": "Media/aeropress_banner.jpeg",
+        "grind_size": "Medium-fine",
+        "ingredients": {
+          "coffee": "17g",
+          "water": "250ml (93°C)"
+        },
+        "equipment": ["AeroPress", "Paper filter", "Stirrer"],
+        "steps": [
+          "Insert a paper filter into the AeroPress cap and rinse it with hot water.",
+          "Assemble the AeroPress on a cup or inverted if using the inverted method.",
+          "Add the ground coffee into the AeroPress chamber.",
+          "Pour 50ml of hot water and stir gently, allowing the coffee to bloom for 30 seconds.",
+          "Add the remaining water up to the top and stir again.",
+          "Place the plunger on top and wait for 1 minute.",
+          "Slowly press down the plunger over 20-30 seconds.",
+          "Enjoy as is, or add hot water to dilute for an Americano."
+        ]
+      },
+      {
+        "name": "Pour-Over",
+        "image": "Media/pourover_banner2.jpg",
+        "grind_size": "Medium (like table salt)",
+        "ingredients": {
+          "coffee": "15g",
+          "water": "250ml (93°C)"
+        },
+        "equipment": ["Hario V60", "Paper filter", "Gooseneck kettle"],
+        "steps": [
+          "Place the paper filter into the V60 and rinse it with hot water.",
+          "Grind coffee to a medium consistency.",
+          "Add the coffee grounds to the V60.",
+          "Start with a 30ml pour to bloom the coffee and wait for 30-45 seconds.",
+          "Slowly pour water in circular motions in 3-4 stages.",
+          "Maintain a total brew time of 2:30 to 3:30 minutes.",
+          "Once dripping stops, remove the filter and serve."
+        ]
+      },
+      {
+        "name": "Moka Pot",
+        "image": "Media/mokapot_banner.jpg",
+        "grind_size": "Fine (but not as fine as espresso)",
+        "ingredients": {
+          "coffee": "15-18g",
+          "water": "Fill bottom chamber to the valve with hot water"
+        },
+        "equipment": ["Moka Pot"],
+        "steps": [
+          "Fill the bottom chamber of the Moka Pot with hot water up to the valve.",
+          "Insert the filter basket and fill it evenly with coffee grounds without pressing.",
+          "Assemble the Moka Pot and place it on medium heat.",
+          "Watch for coffee to start flowing (~2 minutes), then reduce the heat.",
+          "When the pot starts sputtering, remove it from heat immediately.",
+          "Cool the base with a damp cloth to stop extraction.",
+          "Pour and enjoy as is or mix with milk."
+        ]
+      },
+      {
+        "name": "Cold Brew",
+        "image": "Media/coldbrew_banner.jpg",
+        "grind_size": "Coarse (like breadcrumbs)",
+        "ingredients": {
+          "coffee": "100g",
+          "water": "1 liter (cold or room temperature)"
+        },
+        "equipment": ["Jar or pitcher", "Fine mesh filter or cheesecloth"],
+        "steps": [
+          "Grind coffee to a coarse consistency.",
+          "Add coffee grounds to a jar or pitcher.",
+          "Pour cold or room-temperature water over the grounds.",
+          "Stir gently to ensure all grounds are saturated.",
+          "Cover and let steep in the refrigerator for 12-24 hours.",
+          "Strain the coffee using a fine mesh filter or cheesecloth.",
+          "Dilute with water or milk if desired and serve over ice."
+        ]
+      }
+    ]
+  }
+  

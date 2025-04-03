@@ -223,3 +223,42 @@ while st.session_state.timer_active:
     success_message.empty()
     
     st.session_state.timer_active = False
+
+st.divider()
+st.write('\n')
+
+
+def recipe(brew_type):
+
+    with open('recipes.json', 'r', encoding='utf-8') as f:
+        recipes = json.load(f)['recipes']
+        
+        for user_brew in recipes:
+            if user_brew['name'] == brew_type:
+                recipe_box.markdown(f"### :coffee: {user_brew['name']}")
+                recipe_box.image(user_brew['image'], use_container_width=True)
+                recipe_box.markdown(f"**Grind Size:** {user_brew['grind_size']}")
+            
+                recipe_box.markdown("#### Ingredients:")
+                for ingredient, amount in user_brew["ingredients"].items():
+                    recipe_box.markdown(f"- **{ingredient.capitalize()}**: {amount}")
+                
+                recipe_box.markdown("#### Equipment:")
+                for item in user_brew["equipment"]:
+                    recipe_box.markdown(f"- {item}")
+                
+                recipe_box.markdown("#### Steps:")
+                for i, step in enumerate(user_brew["steps"], start=1):
+                    recipe_box.markdown(f"{i}. {step}")
+                
+                break
+
+
+st.subheader('Brewing Recipes', anchor=False)
+st.write('\n')
+
+brew_type = st.segmented_control('**Select your preferred home brewing method:**',
+                     options=['French Press', 'Pour-Over', 'AeroPress', 'Moka Pot', 'Cold Brew'])
+if brew_type:
+    recipe_box = st.container(border=True)
+    recipe(brew_type)
